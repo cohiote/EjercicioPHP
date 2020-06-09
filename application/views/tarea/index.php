@@ -126,32 +126,41 @@
 			
 			var id_employee = $('input[name=txtIDEmpleado]');
 
+			//////////////   No funciona
 			// $.ajax({
 			// 	type: 'ajax',
-			// 	method: 'get',
+			// 	// method: 'get',
 			// 	url: http://localhost/CIAjaxCRUD/index.php/employee/showAllEmployee',
 			// 	async: false,
 			// 	dataType: 'json',
 			// 	success: function(data){
+
+			// 		if(data){
+            //                     alert(data)
+            //                 }
+            //                 else{
+            //                     alert("error")
+			// 				}
+							
 			// 	//	$('input[name=txtIDEmpleado]').val(data.id);
-			// 	 console.log(data);
-			// 	//  var html = '';
-			// 	// 	var i;
-			// 	// 	for(i=0; i<data.length; i++){
+			// 	// console.log(data);
+			// 	//   var html = '';
+			// 	//  	var i;
+			// 	//  	for(i=0; i<data.length; i++){
 					
-			// 	// 		html +='<tr>'+
-			// 	// 					'<td>'+data[i].id_tarea+'</td>'+
-			// 	// 					'<td>'+data[i].nombre+'</td>'+
+			// 	//  		html +='<tr>'+
+			// 	//  					'<td>'+data[i].id+'</td>'+
+			// 	//  					'<td>'+data[i].employee_name+'</td>'+
 			// 	// 					'<td>'+data[i].id_employee+'</td>'+
 			// 	// 					'<td>'+data[i].cant_horas+'</td>'+
 			// 	// 					'<td>'+data[i].cant_h_x_d+'</td>'+
 			// 	// 					'<td>'+data[i].creada_en+'</td>'+
-			// 	// 					'<td>'+
+			// 	 					'<td>'+
 			// 	// 						'<a href="javascript:;" class="btn btn-info item-edit" data="'+data[i].id_tarea+'">Edit</a>'+
 			// 	// 						'<a href="javascript:;" class="btn btn-danger item-delete" data="'+data[i].id_tarea+'">Delete</a>'+
 			// 	// 					'</td>'+
 			// 	// 			    '</tr>';
-			// 	// 	}
+			// 	 	}
 			// 	// 	$('#showdata').html(html);
 			// 	},
 			// 	error: function(){
@@ -159,8 +168,9 @@
 
 			// 	}
 			// });
-			
+
 			// console.log(data);
+			
 			if(result=='123'){
 				$.ajax({
 					type: 'ajax',
