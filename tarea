@@ -1,0 +1,10 @@
+
+tabla tarea
+id
+id empleado
+nombre
+cantidad horas por dia
+cantidad dias
+
+cambiar tiempo de la vista
+date_default_timezone_set('America/Argentina/Mendoza');
