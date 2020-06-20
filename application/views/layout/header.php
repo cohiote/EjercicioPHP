@@ -11,7 +11,24 @@
 
 <div class="navbar navbar-default">
 	<div class="container">
-		<h2><span class="glyphicon glyphicon-home"></span>&nbsp;TutorialsPoint2K16</h2>
+		<!-- Agregamos tabla para poder poner botones para acceder a los 2 controladores -->
+		<table width= 100%>
+			<tr align="center">
+				<td>
+					<h2><span class="glyphicon glyphicon-home"></span>&nbsp;TutorialsPoint2K16</h2>
+ 				</td>
+				<td >
+					<form method="" action="<?php  echo base_url(); ?>Employee">
+					<button id="submit-buttons" type="submit" ​​​​​>Empleados</button>
+					</form>
+				</td>	
+				<td>
+					<form method="" action="<?php  echo base_url(); ?>Tarea">
+					<button id="submit-buttons" type="submit" ​​​​​>Tareas</button>
+					</form>
+				</td>
+			</tr>
+		</table>
 	</div>
 </div>
 <div class="container">

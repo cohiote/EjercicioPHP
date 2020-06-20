@@ -13,6 +13,12 @@ Class Employee extends CI_Controller{
 		$this->load->view('layout/footer');
 	}
 
+	// Método para traer lista de empleados y sus ID
+	public function getEmpleados(){
+		$result = $this->m->getEmpleados();
+		echo json_encode($result);
+	}
+
 	public function showAllEmployee(){
 		$result = $this->m->showAllEmployee();
 		echo json_encode($result);

@@ -53,7 +53,12 @@
 				<div class="form-group">
         			<label for="id_employee" class="label-control col-md-4">ID Empleado</label>
         			<div class="col-md-8">
-        				<input type="text" name="txtIDEmpleado" class="form-control">
+		<!-- Identifico al SELECT con un Id para que lo tome el JS -->
+        				<!-- <input type="text" name="txtIDEmpleado" class="form-control"> -->
+						<select id="list_emp" name="txtIDEmpleado" class="form-control">
+		<!-- No pongo OPTION porque lo arma el JS -->
+						<!-- <option value="">Elija empleado</option> -->
+						</select>
         			</div>
 				</div>
 			</form>
@@ -86,16 +91,40 @@
 
 <script>
 	$(function(){
+
 		showAllTarea();
+
+	//	Declaro acá la variable para poder accederla desde las 2 funciones $('#btnAdd') y $('#btnSave')
+		var id_employee = 0;
 
 		//Add New
 		$('#btnAdd').click(function(){
 			$('#myModal').modal('show');
 			$('#myModal').find('.modal-title').text('Add New Tarea');
-			// $('#myForm').attr('action', '<?php echo base_url() ?>tarea/addTarea');
-			$('#myForm').attr('action', 'http://localhost/CIAjaxCRUD/index.php/tarea/addTarea');
-		});
 
+	//	Agrego el JS para llenar el SELECT del formulario
+	//	Llama al método que trae los ID y NOMBRE de empleados para el desplegable (antes llamar al addTarea)
+			$('#list_emp').html('<option>Elija empleado</option>');	// si recargo sin guardar me duplica datos
+																	// por eso reinicio el HTML		
+			$.post("<?php echo base_url(); ?>"+"Employee/getEmpleados",
+				function(data){
+					var emp = JSON.parse(data);
+					$.each(emp,function(i, item){
+						$('#list_emp').append('<option value="'+item.id+'">'+item.employee_name+'</option>');
+					});
+				}
+			);
+	//	Acá termina el JS para llenar el SELECT del formulario
+
+	//	Con este JS tomo el valor seleccionado y lo guardo en una variable
+			$('#list_emp').change(function(){
+				$('#list_emp option:selected').each(function(){
+					id_employee = $('#list_emp').val();
+				});
+			});
+
+			$('#myForm').attr('action', '<?php echo base_url() ?>Tarea/addTarea');
+		});
 
 		$('#btnSave').click(function(){
 			var url = $('#myForm').attr('action');
@@ -123,55 +152,15 @@
 				cant_h_x_d.parent().parent().removeClass('has-error');
 				result +='3';
 			}
-			
-			var id_employee = $('input[name=txtIDEmpleado]');
+	//	Valido que se seleccionó un empleado
+			if(id_employee==0){
+				alert('Seleccione un empleado');
+			}else{
+				 result +='4';
+				 id_employee = 0;	// si no la pongo en cero al crear una nueva tarea puedo dejarla sin empleado
+			}
 
-			//////////////   No funciona
-			// $.ajax({
-			// 	type: 'ajax',
-			// 	// method: 'get',
-			// 	url: http://localhost/CIAjaxCRUD/index.php/employee/showAllEmployee',
-			// 	async: false,
-			// 	dataType: 'json',
-			// 	success: function(data){
-
-			// 		if(data){
-            //                     alert(data)
-            //                 }
-            //                 else{
-            //                     alert("error")
-			// 				}
-							
-			// 	//	$('input[name=txtIDEmpleado]').val(data.id);
-			// 	// console.log(data);
-			// 	//   var html = '';
-			// 	//  	var i;
-			// 	//  	for(i=0; i<data.length; i++){
-					
-			// 	//  		html +='<tr>'+
-			// 	//  					'<td>'+data[i].id+'</td>'+
-			// 	//  					'<td>'+data[i].employee_name+'</td>'+
-			// 	// 					'<td>'+data[i].id_employee+'</td>'+
-			// 	// 					'<td>'+data[i].cant_horas+'</td>'+
-			// 	// 					'<td>'+data[i].cant_h_x_d+'</td>'+
-			// 	// 					'<td>'+data[i].creada_en+'</td>'+
-			// 	 					'<td>'+
-			// 	// 						'<a href="javascript:;" class="btn btn-info item-edit" data="'+data[i].id_tarea+'">Edit</a>'+
-			// 	// 						'<a href="javascript:;" class="btn btn-danger item-delete" data="'+data[i].id_tarea+'">Delete</a>'+
-			// 	// 					'</td>'+
-			// 	// 			    '</tr>';
-			// 	 	}
-			// 	// 	$('#showdata').html(html);
-			// 	},
-			// 	error: function(){
-			// 		alert('Could not get Data from Database');
-
-			// 	}
-			// });
-
-			// console.log(data);
-			
-			if(result=='123'){
+			if(result=='1234'){
 				$.ajax({
 					type: 'ajax',
 					method: 'post',
@@ -206,13 +195,11 @@
 			var id = $(this).attr('data');
 			$('#myModal').modal('show');
 			$('#myModal').find('.modal-title').text('Edit Tarea');
-			// $('#myForm').attr('action', '<?php echo base_url() ?>tarea/updateTarea');
-			$('#myForm').attr('action', 'http://localhost/CIAjaxCRUD/index.php/tarea/updateTarea');
+			$('#myForm').attr('action', '<?php echo base_url() ?>Tarea/updateTarea');
 			$.ajax({
 				type: 'ajax',
 				method: 'get',
-				// url: '<?php echo base_url() ?>tarea/editTarea',
-				url: 'http://localhost/CIAjaxCRUD/index.php/tarea/editTarea',
+				url: '<?php echo base_url() ?>Tarea/editTarea',
 				data: {id_tarea: id},
 				async: false,
 				dataType: 'json',
@@ -238,8 +225,7 @@
 					type: 'ajax',
 					method: 'get',
 					async: false,
-					url: '<?php echo base_url() ?>tarea/deleteTarea',
-					// url: 'http://localhost/CIAjaxCRUD/index.php/tarea/deleteTarea',
+					url: '<?php echo base_url() ?>Tarea/deleteTarea',
 					data:{id_tarea: id},
 					dataType: 'json',
 					success: function(response){
@@ -258,19 +244,14 @@
 			});
 		});
 
-
-
-
 		//function
 		function showAllTarea(){
 			$.ajax({
 				type: 'ajax',
-				// url: '<?php echo base_url() ?>Tarea/showAllTarea',
-				url: 'http://localhost/CIAjaxCRUD/index.php/tarea/showalltarea',
+				url: '<?php echo base_url() ?>Tarea/showAllTarea',
 				async: false,
 				dataType: 'json',
 				success: function(data){
- //console.log(data);
 					var html = '';
 					var i;
 					for(i=0; i<data.length; i++){
@@ -297,3 +278,6 @@
 		}
 	});
 </script>
+
+<!-- Faltaría que aparezcan los empeleados al editar cuando es la primer carga de la vista. -->
+<!-- Una vez que carga la tarea debería mostrar el nombre del empleado y no el ID. -->
