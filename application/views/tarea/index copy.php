@@ -3,7 +3,7 @@
 	<div class="alert alert-success" style="display: none;">
 		
 	</div>
-	<button id="btnAdd" class="btn btn-success">Nueva Tarea</button>
+	<button id="btnAdd" class="btn btn-success">Add New</button>
 	<table class="table table-bordered table-responsive" style="margin-top: 20px;">
 		<thead>
 			<tr>
@@ -12,7 +12,7 @@
 				<td>Emplado</td>
 				<td>Cantidad de horas</td>
 				<td>Horas por día</td>
-				<td>Creada en</td>
+				<td>Creado en</td>
 	 			<td>Acción</td>
 			</tr>
 		</thead>
@@ -64,8 +64,8 @@
 			</form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-        <button type="button" id="btnSave" class="btn btn-primary">Guardar cambios</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" id="btnSave" class="btn btn-primary">Save changes</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -76,14 +76,14 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Confirmar Borrado</h4>
+        <h4 class="modal-title">Confirm Delete</h4>
       </div>
       <div class="modal-body">
-	        ¿Quiere borrar este registro?        	
+        	Do you want to delete this record?
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-        <button type="button" id="btnDelete" class="btn btn-danger">Borrar</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" id="btnDelete" class="btn btn-danger">Delete</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -95,16 +95,34 @@
 		showAllTarea();
 
 	//	Declaro acá la variable para poder accederla desde las 2 funciones $('#btnAdd') y $('#btnSave')
-	var id_employee = 0;
-	// no estoy usando el nombre del empleado
-	// var employee_name;
+		var id_employee = 0;
 
 		//Add New
 		$('#btnAdd').click(function(){
 			$('#myModal').modal('show');
-			$('#myModal').find('.modal-title').text('Agregar Nueva Tarea');
-			// Función para crear y llenar el SELECT
-			desplegable();
+			$('#myModal').find('.modal-title').text('Add New Tarea');
+
+	//	Agrego el JS para llenar el SELECT del formulario
+	//	Llama al método que trae los ID y NOMBRE de empleados para el desplegable (antes llamar al addTarea)
+			$('#list_emp').html('<option>Elija empleado</option>');	// si recargo sin guardar me duplica datos
+																	// por eso reinicio el HTML		
+			$.post("<?php echo base_url(); ?>"+"Employee/getEmpleados",
+				function(data){
+					var emp = JSON.parse(data);
+					$.each(emp,function(i, item){
+						$('#list_emp').append('<option value="'+item.id+'">'+item.employee_name+'</option>');
+					});
+				}
+			);
+	//	Acá termina el JS para llenar el SELECT del formulario
+
+	//	Con este JS tomo el valor seleccionado y lo guardo en una variable
+			$('#list_emp').change(function(){
+				$('#list_emp option:selected').each(function(){
+					id_employee = $('#list_emp').val();
+				});
+			});
+
 			$('#myForm').attr('action', '<?php echo base_url() ?>Tarea/addTarea');
 		});
 
@@ -155,11 +173,11 @@
 							$('#myModal').modal('hide');
 							$('#myForm')[0].reset();
 							if(response.type=='add'){
-								var type = 'agregada'
+								var type = 'added'
 							}else if(response.type=='update'){
-								var type ="actualizada"
+								var type ="updated"
 							}
-							$('.alert-success').html('Tarea '+type+' satisfactoriamente').fadeIn().delay(4000).fadeOut('slow');
+							$('.alert-success').html('Tarea '+type+' successfully').fadeIn().delay(4000).fadeOut('slow');
 							showAllTarea();
 						}else{
 							alert('Error');
@@ -175,8 +193,6 @@
 		//edit
 		$('#showdata').on('click', '.item-edit', function(){
 			var id = $(this).attr('data');
-			// Función para crear y llenar el SELECT
-			desplegable();
 			$('#myModal').modal('show');
 			$('#myModal').find('.modal-title').text('Edit Tarea');
 			$('#myForm').attr('action', '<?php echo base_url() ?>Tarea/updateTarea');
@@ -215,7 +231,7 @@
 					success: function(response){
 						if(response.success){
 							$('#deleteModal').modal('hide');
-							$('.alert-success').html('Tarea borrada satisfactoriamente').fadeIn().delay(4000).fadeOut('slow');
+							$('.alert-success').html('Tarea Deleted successfully').fadeIn().delay(4000).fadeOut('slow');
 							showAllTarea();
 						}else{
 							alert('Error');
@@ -228,8 +244,7 @@
 			});
 		});
 
-		//functions
-
+		//function
 		function showAllTarea(){
 			$.ajax({
 				type: 'ajax',
@@ -240,6 +255,7 @@
 					var html = '';
 					var i;
 					for(i=0; i<data.length; i++){
+					
 						html +='<tr>'+
 									'<td>'+data[i].id_tarea+'</td>'+
 									'<td>'+data[i].nombre+'</td>'+
@@ -248,8 +264,8 @@
 									'<td>'+data[i].cant_h_x_d+'</td>'+
 									'<td>'+data[i].creada_en+'</td>'+
 									'<td>'+
-										'<a href="javascript:;" class="btn btn-info item-edit" data="'+data[i].id_tarea+'">Editar</a>'+
-										'<a href="javascript:;" class="btn btn-danger item-delete" data="'+data[i].id_tarea+'">Borrar</a>'+
+										'<a href="javascript:;" class="btn btn-info item-edit" data="'+data[i].id_tarea+'">Edit</a>'+
+										'<a href="javascript:;" class="btn btn-danger item-delete" data="'+data[i].id_tarea+'">Delete</a>'+
 									'</td>'+
 							    '</tr>';
 					}
@@ -259,34 +275,9 @@
 					alert('Could not get Data from Database');
 				}
 			});
-		}  // Fin showAllTarea()
-
-
-		function desplegable(){
-		//	Este JS sirve para llenar el SELECT del formulario con los datos ID y NOMBRE de la tabla tbl_employee		
-			$('#list_emp').html('<option>Elija empleado</option>');	// si recargo sin guardar me duplica datos
-																	// por eso reinicio el HTML		
-				$.post("<?php echo base_url(); ?>"+"Employee/getEmpleados",
-					function(data_emp){
-						var emp = JSON.parse(data_emp);
-						$.each(emp,function(i, item){
-							$('#list_emp').append('<option value="'+item.id+'">'+item.employee_name+'</option>');
-						});
-					}
-				);
-		//	Acá termina el JS para llenar el SELECT del formulario
-
-		//	Con este JS tomo el valor seleccionado y lo guardo en una variable
-				$('#list_emp').change(function(){
-					$('#list_emp option:selected').each(function(){
-						id_employee = $('#list_emp').val();
-						// no estoy usando el nombre del empleado	
-						// employee_name = $('#list_emp option:selected').text();
-					});
-				});
-		} // Fin desplegable()
-
+		}
 	});
 </script>
 
+<!-- Faltaría que aparezcan los empeleados al editar cuando es la primer carga de la vista. -->
 <!-- Una vez que carga la tarea debería mostrar el nombre del empleado y no el ID. -->
