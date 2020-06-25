@@ -18,13 +18,13 @@
 					<h2><span class="glyphicon glyphicon-home"></span>&nbsp;TutorialsPoint2K16</h2>
  				</td>
 				<td >
-					<form method="" action="<?php  echo base_url(); ?>Employee">
-					<button id="submit-buttons" type="submit" ​​​​​>Empleados</button>
+					<form method="" action="<?php  echo base_url(); ?>Employee">					
+					<button id="submit-buttons" type="submit" class="btn btn-success"​​​​​>Empleados</button>
 					</form>
 				</td>	
 				<td>
 					<form method="" action="<?php  echo base_url(); ?>Tarea">
-					<button id="submit-buttons" type="submit" ​​​​​>Tareas</button>
+					<button id="submit-buttons" type="submit" class="btn btn-success"​​​​​>Tareas</button>
 					</form>
 				</td>
 			</tr>
